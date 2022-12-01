@@ -4,9 +4,8 @@ import * as IAM from 'aws-cdk-lib/aws-iam';
 import * as Lex from 'aws-cdk-lib/aws-lex';
 import * as Lambda from 'aws-cdk-lib/aws-lambda';
 import * as Connect from 'aws-cdk-lib/aws-connect';
+import { ConnectLexBotAssociation } from "cdk-amazon-connect-resources";
 import { Construct } from 'constructs';
-
-import { LexBotAssociation } from "./custom-resources";
 
 export type CustomizedBotProperties =
     & Omit<Lex.CfnBotProps,
@@ -41,7 +40,7 @@ export class ConnectLexBot extends CDK.Resource {
     public readonly lexBot: Lex.CfnBot;
     public readonly lexBotVersion: Lex.CfnBotVersion;
     public readonly lexBotAlias: Lex.CfnBotAlias;
-    public readonly lexBotAssociation: LexBotAssociation;
+    public readonly lexBotAssociation: ConnectLexBotAssociation;
 
     constructor(
         scope: Construct,
@@ -137,7 +136,7 @@ export class ConnectLexBot extends CDK.Resource {
             ]
         });
 
-        this.lexBotAssociation = new LexBotAssociation(this, 'lexBotAssociation', {
+        this.lexBotAssociation = new ConnectLexBotAssociation(this, 'lexBotAssociation', {
             connectInstanceId: props.connectInstance.ref,
             lexBotAliasArn: this.lexBotAlias.attrArn,
         });

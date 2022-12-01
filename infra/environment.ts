@@ -1,9 +1,9 @@
-import {IsNumberString, IsString} from 'class-validator';
+import {IsString, Matches} from 'class-validator';
 
 export class Environment {
 
-    @IsNumberString()
-    ACCOUNT_ID!: string;
+    @Matches(/^\d{12}$/)
+    ACCOUNT_ID!: `${number}`;
 
     @IsString()
     REGION!: string;

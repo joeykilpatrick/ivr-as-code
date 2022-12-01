@@ -2,9 +2,10 @@ import * as CDK from 'aws-cdk-lib';
 import * as IAM from 'aws-cdk-lib/aws-iam';
 import * as Lambda from 'aws-cdk-lib/aws-lambda';
 import * as Connect from 'aws-cdk-lib/aws-connect';
+import { ConnectLambdaFunction, ConnectFlowPhoneNumber } from "cdk-amazon-connect-resources";
 import { transformAndValidateSync } from "class-transformer-validator";
 
-import { ConnectLambdaFunction, ConnectPhoneNumber, ConnectLexBot } from ".";
+import { ConnectLexBot } from './ConnectLexBot';
 import { Environment as StateMachineEnvironment } from "../state-machine/environment";
 import { generateContactFlowContent } from "./contact-flow";
 import { Environment } from "./environment";
@@ -163,14 +164,14 @@ const stateMachineFunction = new ConnectLambdaFunction(stack, 'stateMachineFunct
 });
 
 const stateMachineContactFlow = new Connect.CfnContactFlow(stack, 'ivrContactFlow', {
-    content: generateContactFlowContent(stateMachineFunction.lambda.functionArn),
+    content: generateContactFlowContent(stateMachineFunction.functionArn),
     instanceArn: connectInstance.attrArn,
     name: 'GeneratedStateMachine',
     state: 'ACTIVE',
     type: "CONTACT_FLOW",
 });
 
-const connectPhoneNumber = new ConnectPhoneNumber(stack, 'connectPhoneNumber', {
+const connectPhoneNumber = new ConnectFlowPhoneNumber(stack, 'connectPhoneNumber', {
     type: 'DID',
     countryCode: 'US',
     connectInstance,
@@ -179,7 +180,7 @@ const connectPhoneNumber = new ConnectPhoneNumber(stack, 'connectPhoneNumber', {
 
 new CDK.CfnOutput(stack, 'phoneNumberOutput', {
     exportName: 'phone-number',
-    value: connectPhoneNumber.phoneNumber.attrAddress,
+    value: connectPhoneNumber.attrAddress,
 });
 
 app.synth();

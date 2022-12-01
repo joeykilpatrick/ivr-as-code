@@ -1,4 +1,4 @@
-import {CustomizedBotLocaleProperty} from "../infra";
+import {CustomizedBotLocaleProperty} from "../infra/ConnectLexBot";
 
 const yesNoBotConfig = {
     nluConfidenceThreshold: 0.75,
